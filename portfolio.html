@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | JK Media Services</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Portfolio Specific Styles - High End Refinement */
+        .portfolio-header {
+            padding: 200px 0 100px;
+            text-align: center;
+            background: radial-gradient(circle at center, var(--color-bg-secondary) 0%, var(--color-bg-primary) 100%);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 60px;
+            flex-wrap: wrap;
+            padding: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 2px;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--color-text-muted);
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            font-family: var(--font-body);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            color: var(--color-accent-gold);
+            border-bottom: 1px solid var(--color-accent-gold);
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 30px;
+            padding-bottom: 150px;
+        }
+
+        .portfolio-item {
+            position: relative;
+            height: 450px;
+            overflow: hidden;
+            cursor: pointer;
+            border-radius: 2px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .portfolio-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        .portfolio-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .portfolio-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 60%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: flex-start;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .portfolio-item:hover .portfolio-overlay {
+            opacity: 1;
+        }
+
+        .item-category {
+            color: var(--color-accent-gold);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            transform: translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        .item-title {
+            color: var(--color-text-main);
+            font-size: 1.5rem;
+            font-family: var(--font-heading);
+            letter-spacing: 1px;
+            transform: translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1) 0.1s;
+        }
+
+        .portfolio-item:hover .item-category,
+        .portfolio-item:hover .item-title {
+            transform: translateY(0);
+        }
+
+        /* Lightbox - Premium Feel */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 6, 0.98);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s var(--transition-smooth);
+        }
+
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            max-width: 85%;
+            max-height: 85%;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            color: var(--color-text-main);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            transition: var(--transition-fast);
+        }
+
+        .lightbox-close:hover {
+            color: var(--color-accent-gold);
+            border-color: var(--color-accent-gold);
+            transform: rotate(90deg);
+        }
+
+        @media (max-width: 768px) {
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .portfolio-item {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar scrolled">
+        <div class="container nav-container">
+            <a href="../index.html" class="logo">
+                JK <span class="text-gold">Media</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="#" class="active">Portfolio</a></li>
+                <li><a href="../index.html#contact" class="btn-nav">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="portfolio-header">
+        <div class="container">
+            <span class="section-subtitle">Our Work</span>
+            <h2 class="section-title">Visual <span class="text-gold">Stories</span></h2>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Filters -->
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="wedding">Weddings</button>
+            <button class="filter-btn" data-filter="commercial">Commercial/Brand</button>
+            <button class="filter-btn" data-filter="music">Music Videos</button>
+            <button class="filter-btn" data-filter="photo">Photography</button>
+        </div>
+
+        <!-- Gallery -->
+        <div class="portfolio-grid" id="portfolio-grid">
+            <!-- Wedding 1 -->
+            <div class="portfolio-item" data-category="wedding">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop"
+                    alt="Wedding Film">
+                <div class="portfolio-overlay">
+                    <span class="item-category">Wedding</span>
+                    <h3 class="item-title">Sarah & Tom</h3>
+                </div>
+            </div>
+
+            <!-- Commercial 1 -->
+            <div class="portfolio-item" data-category="commercial">
+                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop"
+                    alt="Brand Shoot">
+                <div class="portfolio-overlay">
+                    <span class="item-category">Commercial</span>
+                    <h3 class="item-title">Luxe Perfume Ad</h3>
+                </div>
+            </div>
+
+            <!-- Music Video -->
+            <div class="portfolio-item" data-category="music">
+                <img src="https://images.unsplash.com/photo-1514525253440-b393452e8d26?q=80&w=1920&auto=format&fit=crop"
+                    alt="Music Video">
+                <div class="portfolio-overlay">
+                    <span class="item-category">Music Video</span>
+                    <h3 class="item-title">Neon Nights</h3>
+                </div>
+            </div>
+
+            <!-- Photo -->
+            <div class="portfolio-item" data-category="photo">
+                <img src="https://images.unsplash.com/photo-1554048612-387768052bf7?q=80&w=2065&auto=format&fit=crop"
+                    alt="Portrait">
+                <div class="portfolio-overlay">
+                    <span class="item-category">Photography</span>
+                    <h3 class="item-title">Editorial Portrait</h3>
+                </div>
+            </div>
+
+            <!-- Wedding 2 -->
+            <div class="portfolio-item" data-category="wedding">
+                <img src="https://images.unsplash.com/photo-1511285560982-1351cdeb9821?q=80&w=1920&auto=format&fit=crop"
+                    alt="Wedding">
+                <div class="portfolio-overlay">
+                    <span class="item-category">Wedding</span>
+                    <h3 class="item-title">Beach Union</h3>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <img src="" alt="Zoomed Image" class="lightbox-content">
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" style="background: var(--color-bg-secondary);">
+        <div class="container footer-container">
+            <div class="copyright">
+                &copy; 2026 JK Media Services.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Filters
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const items = document.querySelectorAll('.portfolio-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filterValue = btn.getAttribute('data-filter');
+
+                items.forEach(item => {
+                    if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Lightbox
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = lightbox.querySelector('img');
+        const closeBtn = document.querySelector('.lightbox-close');
+
+        items.forEach(item => {
+            item.addEventListener('click', () => {
+                const imgSrc = item.querySelector('img').src;
+                lightboxImg.src = imgSrc;
+                lightbox.classList.add('active');
+            });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+
+</html>
